@@ -1,31 +1,35 @@
-class Int8:
-    def __init__(self, bits, signed=False):
-        if len(bits) > 8:
-            raise ValueError(f"Construction of int8 attempted with more than 8 bits, received {len(bits)} bits")
+class BitInt:
+    def __init__(self, bits=None, size=8, signed=False):
+        if bits is None:
+            bits = []
 
-        self.bits = bits
+        if len(bits) > size:
+            raise ValueError(f"Construction of BitInt attempted with more than {size} bits, received {len(bits)} bits.")
+
+        padding = [False for _ in range(size - len(bits))]
+        self.bits = padding + bits
         self.signed = signed
 
     @staticmethod
-    def from_int(x: int):
-        binary_representation = '{0:08b}'.format(x)
+    def from_int(value: int):
+        binary = '{0:08b}'.format(value)
 
         bits = []
         signed = False
 
-        if binary_representation[0] == "-":
+        if binary[0] == "-":
             signed = True
             bits.append(True)
-            binary_representation = binary_representation[1:]
+            binary = binary[1:]
 
-        bits.extend([y == "1" for y in binary_representation])
+        bits.extend([bit == "1" for bit in binary])
 
-        return Int8(bits, signed=signed)
+        return BitInt(bits, signed=signed)
 
     def __int__(self):
         out = 0
 
-        bit_copy = self.bits
+        bit_copy = self.bits.copy()
 
         if self.signed:
             signing_bit = bit_copy.pop(0)
