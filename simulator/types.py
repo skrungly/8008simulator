@@ -1,44 +1,55 @@
 class BitInt:
-    def __init__(self, bits=None, size=8, signed=False):
-        if bits is None:
-            bits = []
+    def __init__(self, value: int = 0, width: int = 8):
+        # Truncate the value and un-sign it.
+        value &= (1 << width) - 1
 
-        if len(bits) > size:
-            raise ValueError(f"Construction of BitInt attempted with more than {size} bits, received {len(bits)} bits.")
+        self._value = value
+        self._width = width
 
-        padding = [False for _ in range(size - len(bits))]
-        self.bits = padding + bits
-        self.signed = signed
+    def __repr__(self):
+        width = self.width
+        unsigned = self.unsigned
+        signed = self.signed
+        # This is the binary representation of the value.
+        binary = f"{unsigned:0{width}b}"
 
-    @staticmethod
-    def from_int(value: int):
-        binary = '{0:08b}'.format(value)
+        return f"<BitInt width={width} unsigned={unsigned} signed={signed} binary={binary}>"
 
-        bits = []
-        signed = False
+    def __and__(self, other):
+        width = max(self.width, other.width)
+        result = self.unsigned & other.unsigned
 
-        if binary[0] == "-":
-            signed = True
-            bits.append(True)
-            binary = binary[1:]
+        return BitInt(result, width)
 
-        bits.extend([bit == "1" for bit in binary])
+    def __or__(self, other):
+        width = max(self.width, other.width)
+        result = self.unsigned | other.unsigned
 
-        return BitInt(bits, signed=signed)
+        return BitInt(result, width)
 
-    def __int__(self):
-        out = 0
+    def __xor__(self, other):
+        width = max(self.width, other.width)
+        result = self.unsigned ^ other.unsigned
 
-        bit_copy = self.bits.copy()
+        return BitInt(result, width)
 
-        if self.signed:
-            signing_bit = bit_copy.pop(0)
+    @property
+    def unsigned(self) -> int:
+        return self._value
 
-        for bit in bit_copy:
-            out = (out << 1) | bit
+    @property
+    def signed(self) -> int:
+        # The maximum integer this width can store.
+        max_value = (1 << self._width) - 1
 
-        if self.signed:
-            if signing_bit:
-                out *= -1
+        # If our number is 'negative' (a.k.a. first binary digit is 1):
+        if self._value > max_value >> 1:
+            # Return the two's complement equivalent.
+            return ~(max_value - self._value)
 
-        return out
+        # Otherwise, just return the value.
+        return self._value
+
+    @property
+    def width(self) -> int:
+        return self._width
