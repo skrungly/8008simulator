@@ -86,7 +86,7 @@ class BitInt:
 
     def rotate(self, amount):
         # Allow it to wrap, and work for negative (left) rotations
-        amount %= 8
+        amount %= self.width
 
         # Perform the actual rotation
         return self >> amount | self << self.width - amount
