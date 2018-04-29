@@ -85,6 +85,16 @@ class BitInt:
         return self._width
 
 
+class Address:
+    def __init__(self, high: BitInt, low: BitInt):
+        self.high = high
+        self.low = low
+
+    @property
+    def position(self):
+        return self.high.unsigned, self.low.unsigned
+
+
 class Flags(IntEnum):
     C = 0
     P = 1
