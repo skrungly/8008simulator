@@ -55,6 +55,14 @@ class BitInt:
     def __ne__(self, other):
         return self.unsigned != other.unsigned
 
+    def __lshift__(self, shift):
+        res = self.unsigned << shift
+        return BitInt(res, width=self.width)
+
+    def __rshift__(self, shift):
+        res = self.unsigned >> shift
+        return BitInt(res, width=self.width)
+
     @property
     def unsigned(self) -> int:
         return self._value
@@ -78,7 +86,7 @@ class BitInt:
 
 
 class Flags(IntEnum):
-    C = "carry"
-    P = "parity"
-    Z = "zero"
-    N = "negative"
+    C = 0
+    P = 1
+    Z = 2
+    N = 3
