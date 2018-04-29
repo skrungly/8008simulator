@@ -1,3 +1,6 @@
+from enum import IntEnum
+
+
 class BitInt:
     def __init__(self, value: int = 0, width: int = 8):
         # Truncate the value and un-sign it.
@@ -33,6 +36,25 @@ class BitInt:
 
         return BitInt(result, width)
 
+    # TODO: make sure the 8008 does actually use unsigned comparisons
+    def __gt__(self, other):
+        return self.unsigned > other.unsigned
+
+    def __lt__(self, other):
+        return self.unsigned < other.unsigned
+
+    def __eq__(self, other):
+        return self.unsigned == other.unsigned
+
+    def __ge__(self, other):
+        return self.unsigned >= other.unsigned
+
+    def __le__(self, other):
+        return self.unsigned <= other.unsigned
+
+    def __ne__(self, other):
+        return self.unsigned != other.unsigned
+
     @property
     def unsigned(self) -> int:
         return self._value
@@ -53,3 +75,10 @@ class BitInt:
     @property
     def width(self) -> int:
         return self._width
+
+
+class Flags(IntEnum):
+    C = "carry"
+    P = "parity"
+    Z = "zero"
+    N = "negative"

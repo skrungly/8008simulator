@@ -1,25 +1,26 @@
-from ..types import BitInt
+from ..types import BitInt, Flags
 
 
 class StatusFlags:
+
     def __init__(self):
         self.flags = [False, False, False, False]
 
     @property
     def carry(self):
-        return self.flags[0]
+        return self.flags[Flags.C]
 
     @property
     def parity(self):
-        return self.flags[1]
+        return self.flags[Flags.P]
 
     @property
     def zero(self):
-        return self.flags[2]
+        return self.flags[Flags.Z]
 
     @property
-    def sign(self):
-        return self.flags[3]
+    def negative(self):
+        return self.flags[Flags.N]
 
 
 class Registers:
@@ -32,8 +33,8 @@ class Registers:
         self.register_h = BitInt()
         self.register_l = BitInt()
 
-        self.program_counter = BitInt(size=14)
-        self.address_stack = [BitInt(size=14) for _ in range(7)]
+        self.program_counter = BitInt(width=14)
+        self.address_stack = [BitInt(width=14) for _ in range(7)]
 
         self.status_flags = StatusFlags()
 
