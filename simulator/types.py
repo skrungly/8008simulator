@@ -84,6 +84,13 @@ class BitInt:
     def width(self) -> int:
         return self._width
 
+    def rotate(self, amount):
+        # Allow it to wrap, and work for negative (left) rotations
+        amount %= 8
+
+        # Perform the actual rotation
+        return self >> amount | self << self.width - amount
+
 
 class Address:
     def __init__(self, high: BitInt, low: BitInt):
