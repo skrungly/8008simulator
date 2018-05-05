@@ -71,8 +71,8 @@ class BitInt:
     def signed(self) -> int:
         # If our number is 'negative' (a.k.a. first binary digit is 1):
         if self.unsigned >> self.width - 1:
-		    # The maximum integer this width can store.
-		    max_value = (1 << self.width) - 1
+            # The maximum integer this width can store.
+            max_value = (1 << self.width) - 1
             # Return the two's complement equivalent.
             return ~(max_value - self.unsigned)
 
