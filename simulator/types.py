@@ -69,16 +69,15 @@ class BitInt:
 
     @property
     def signed(self) -> int:
-        # The maximum integer this width can store.
-        max_value = (1 << self._width) - 1
-
         # If our number is 'negative' (a.k.a. first binary digit is 1):
-        if self._value > max_value >> 1:
+        if self.unsigned >> self.width - 1:
+			# The maximum integer this width can store.
+			max_value = (1 << self.width) - 1
             # Return the two's complement equivalent.
-            return ~(max_value - self._value)
+            return ~(max_value - self.unsigned)
 
         # Otherwise, just return the value.
-        return self._value
+        return self.unsigned
 
     @property
     def width(self) -> int:
